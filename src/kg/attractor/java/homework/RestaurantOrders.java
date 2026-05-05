@@ -1,12 +1,14 @@
 package kg.attractor.java.homework;
 
 import com.google.gson.Gson;
+import kg.attractor.java.homework.domain.Item;
 import kg.attractor.java.homework.domain.Order;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
@@ -95,5 +97,41 @@ public class RestaurantOrders {
                 .collect(Collectors.toCollection(TreeSet::new))
                 .stream()
                 .collect(Collectors.toList());
+    }
+
+    public Map<String, List<Order>> groupOrdersByCustomerName() {
+        return orders.stream()
+                .collect(Collectors.groupingBy(order -> order.getCustomer().getFullName()));
+    }
+
+    public Map<String, Double> getTotalSumByCustomerName() {
+        return orders.stream()
+                .collect(Collectors.groupingBy(
+                        order -> order.getCustomer().getFullName(),
+                        Collectors.summingDouble(Order::getTotal)
+                ));
+    }
+
+    public String getCustomerWithMaxTotalSum() {
+        return getTotalSumByCustomerName().entrySet().stream()
+                .max((e1, e2) -> Double.compare(e1.getValue(), e2.getValue()))
+                .map(Map.Entry::getKey)
+                .orElse(null);
+    }
+
+    public String getCustomerWithMinTotalSum() {
+        return getTotalSumByCustomerName().entrySet().stream()
+                .min((e1, e2) -> Double.compare(e1.getValue(), e2.getValue()))
+                .map(Map.Entry::getKey)
+                .orElse(null);
+    }
+
+    public Map<String, Integer> getItemsGroupedByAmount() {
+        return orders.stream()
+                .flatMap(order -> order.getItems().stream())
+                .collect(Collectors.groupingBy(
+                        Item::getName,
+                        Collectors.summingInt(Item::getAmount)
+                ));
     }
 }
