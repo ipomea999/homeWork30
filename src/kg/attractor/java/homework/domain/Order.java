@@ -3,8 +3,6 @@ package kg.attractor.java.homework.domain;
 import java.util.List;
 import java.util.Objects;
 
-import kg.attractor.java.homework.util.NotImplementedException;
-
 public class Order {
     // Этот блок кода менять нельзя! НАЧАЛО!
     private final Customer customer;
@@ -54,6 +52,8 @@ public class Order {
     //----------------------------------------------------------------------
 
     public void calculateTotal() {
-        throw new NotImplementedException("Вам надо реализовать этот метод!");
+        this.total = items.stream()
+                .mapToDouble(item -> item.getPrice() * item.getAmount())
+                .sum();
     }
 }
