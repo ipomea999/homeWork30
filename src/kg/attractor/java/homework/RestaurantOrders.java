@@ -1,13 +1,14 @@
 package kg.attractor.java.homework;
 
 import com.google.gson.Gson;
-
 import kg.attractor.java.homework.domain.Order;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 public class RestaurantOrders {
     // Этот блок кода менять нельзя! НАЧАЛО!
@@ -38,9 +39,61 @@ public class RestaurantOrders {
     //------   Реализация ваших методов должна быть ниже этой линии   ------
     //----------------------------------------------------------------------
 
-    // Наполните этот класс решением домашнего задания.
-    // Вам необходимо создать все необходимые методы
-    // для решения заданий из домашки :)
-    // вы можете добавлять все необходимые imports
-    //
+    public void printOrders(List<Order> ordersToPrint) {
+        ordersToPrint.forEach(order -> System.out.println("Customer: " + order.getCustomer().getFullName() +
+                ", Total: " + order.getTotal() +
+                ", Home Delivery: " + order.isHomeDelivery()));
+    }
+
+    public List<Order> getTopOrders(int n) {
+        return orders.stream()
+                .sorted((o1, o2) -> Double.compare(o2.getTotal(), o1.getTotal()))
+                .limit(n)
+                .collect(Collectors.toList());
+    }
+
+    public List<Order> getLowestOrders(int n) {
+        return orders.stream()
+                .sorted((o1, o2) -> Double.compare(o1.getTotal(), o2.getTotal()))
+                .limit(n)
+                .collect(Collectors.toList());
+    }
+
+    public List<Order> getHomeDeliveryOrders() {
+        return orders.stream()
+                .filter(Order::isHomeDelivery)
+                .collect(Collectors.toList());
+    }
+
+    public Order getMostProfitableHomeDelivery() {
+        return getHomeDeliveryOrders().stream()
+                .max((o1, o2) -> Double.compare(o1.getTotal(), o2.getTotal()))
+                .orElse(null);
+    }
+
+    public Order getLeastProfitableHomeDelivery() {
+        return getHomeDeliveryOrders().stream()
+                .min((o1, o2) -> Double.compare(o1.getTotal(), o2.getTotal()))
+                .orElse(null);
+    }
+
+    public List<Order> getOrdersBetween(double minTotal, double maxTotal) {
+        return orders.stream()
+                .filter(order -> order.getTotal() > minTotal && order.getTotal() < maxTotal)
+                .collect(Collectors.toList());
+    }
+
+    public double getTotalCostOfAllOrders() {
+        return orders.stream()
+                .mapToDouble(Order::getTotal)
+                .sum();
+    }
+
+    public List<String> getUniqueSortedEmails() {
+        return orders.stream()
+                .map(order -> order.getCustomer().getEmail())
+                .collect(Collectors.toCollection(TreeSet::new))
+                .stream()
+                .collect(Collectors.toList());
+    }
 }
