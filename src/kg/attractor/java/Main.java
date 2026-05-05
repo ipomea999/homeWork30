@@ -14,22 +14,22 @@ public class Main {
 
         // протестировать ваши методы вы можете как раз в этом файле (или в любом другом, в котором вам будет удобно)
 
-        System.out.println("--- All Orders ---");
-        orders.printOrders(orders.getOrders());
+        System.out.println("--- Grouped by Customer Name ---");
+        var groupedOrders = orders.groupOrdersByCustomerName();
+        System.out.println("Unique customers count: " + groupedOrders.size());
 
-        System.out.println("\n--- Top 3 Orders ---");
-        orders.printOrders(orders.getTopOrders(3));
+        System.out.println("\n--- Total Sum by Customer ---");
+        var customerTotals = orders.getTotalSumByCustomerName();
+        customerTotals.forEach((name, total) -> System.out.println(name + " : " + total));
 
-        System.out.println("\n--- Lowest 3 Orders ---");
-        orders.printOrders(orders.getLowestOrders(3));
+        System.out.println("\n--- Customer with Max Total Sum ---");
+        System.out.println(orders.getCustomerWithMaxTotalSum());
 
-        System.out.println("\n--- Most profitable home delivery ---");
-        System.out.println(orders.getMostProfitableHomeDelivery().getTotal());
+        System.out.println("\n--- Customer with Min Total Sum ---");
+        System.out.println(orders.getCustomerWithMinTotalSum());
 
-        System.out.println("\n--- Total cost of all orders ---");
-        System.out.println(orders.getTotalCostOfAllOrders());
-
-        System.out.println("\n--- Sorted unique emails ---");
-        orders.getUniqueSortedEmails().forEach(System.out::println);
+        System.out.println("\n--- Items Grouped by Total Amount Sold ---");
+        var itemsSold = orders.getItemsGroupedByAmount();
+        itemsSold.forEach((item, amount) -> System.out.println(item + " : " + amount + " pcs"));
     }
 }
